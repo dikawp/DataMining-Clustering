@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clustering Plot</title>
+</head>
+<body style="text-align: center;">
+    <div style="display: flex; flex-direction: column;">
+        <div style="display: flex;">
+            <img style="width: 40%; margin: auto;" src="data:image/png;base64,{{ clustering_img_data }}" alt="1">
+            <img style="width: 40%; margin: auto;" src="data:image/png;base64,{{ cluster_distribution_img_data }}" alt="2">
+        </div>
+        <div style="display: flex;">
+            <img style="width: 40%; margin: auto;" src="data:image/png;base64,{{ gender_distribution_img_data }}" alt="3">
+            <img style="width: 40%; margin: auto;" src="data:image/png;base64,{{ age_distribution_img_data }}" alt="4">
+        </div>
+        <a style="font-size: 24px;" href="/">Balik ke index</a>
+    </div>
+</body>
+</html>
