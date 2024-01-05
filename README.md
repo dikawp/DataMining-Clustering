@@ -37,4 +37,4 @@
     python app.py
     ```
 
-Buka project di localhost : http://127.0.0.1:5000
+Buka project di localhost : http://localhost:5000 
