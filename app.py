@@ -21,7 +21,7 @@ df = pd.read_csv(path)
 sse_plot_filename = 'static/sse_plot.png'
 sse = []
 for i in range(1, 10):
-    km = KMeans(n_clusters=i)
+    km = KMeans(n_clusters=i, init='k-means++', random_state=42)  # Inisialisasi pusat klaster
     km.fit(df[['Annual Income (k$)', 'Spending Score (1-100)']])
     sse.append(km.inertia_)
 
@@ -29,7 +29,6 @@ plt.xlabel('I')
 plt.ylabel('Sum of squared error')
 plt.plot(range(1, 10), sse)
 
-# Save SSE plot dijadiin IMAGE biar bisa tampil
 sse_img_bytesio = BytesIO()
 plt.savefig(sse_img_bytesio, format='png')
 sse_img_bytesio.seek(0)
@@ -37,9 +36,9 @@ sse_img_data = base64.b64encode(sse_img_bytesio.read()).decode('utf-8')
 
 # --- PLOTTING CLUSTERING
 clustering_plot_filename = 'static/clustering_plot.png'
-km = KMeans(n_clusters=5)
+km = KMeans(n_clusters=5, init='k-means++', random_state=42)  # Inisialisasi pusat klaster
 y_predicted = km.fit_predict(df[['Annual Income (k$)', 'Spending Score (1-100)']])
-df["Clusters"] = y_predicted
+df["Clusters"] = y_predicted + 1  # Menambah 1 ke setiap nilai klaster
 
 plt.figure()
 
@@ -68,7 +67,7 @@ plt.savefig(cluster_distribution_img_bytesio, format='png')
 cluster_distribution_img_bytesio.seek(0)
 cluster_distribution_img_data = base64.b64encode(cluster_distribution_img_bytesio.read()).decode('utf-8')
 
-# --- PLOTTING GENDER DISTRIBUTION IN CLUSTERS
+# --- PLOTTING GENDER
 gender_distribution_plot_filename = 'static/gender_distribution_plot.png'
 gender_distribution = df.groupby(['Clusters', 'Gender']).size().unstack().fillna(0)
 
@@ -84,7 +83,7 @@ plt.savefig(gender_distribution_img_bytesio, format='png')
 gender_distribution_img_bytesio.seek(0)
 gender_distribution_img_data = base64.b64encode(gender_distribution_img_bytesio.read()).decode('utf-8')
 
-# --- PLOTTING AGE DISTRIBUTION IN CLUSTERS
+# --- PLOTTING AGE 
 age_distribution_plot_filename = 'static/age_distribution_plot.png'
 
 plt.figure()
@@ -102,10 +101,14 @@ plt.savefig(age_distribution_img_bytesio, format='png')
 age_distribution_img_bytesio.seek(0)
 age_distribution_img_data = base64.b64encode(age_distribution_img_bytesio.read()).decode('utf-8')
 
+
+# --- ROUTING 
 @app.route('/')
 def index():
-    data = df.to_dict('records')
-    return render_template('index.html', data=data)
+    sorted_data = df.sort_values(by='Clusters')
+
+    sorted_data_records = sorted_data.to_dict('records')
+    return render_template('index.html', data=sorted_data_records)
 
 
 @app.route('/sse_page')
