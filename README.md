@@ -32,3 +32,9 @@
     ```sh
     pip install pandas 
     ```
+5. Run Project
+    ```sh
+    python app.py
+    ```
+
+Buka project di localhost : http://127.0.0.1:5000
