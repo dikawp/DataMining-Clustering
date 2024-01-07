@@ -29,9 +29,6 @@
     ```sh
     pip install scikit-learn 
     ```
-    ```sh
-    pip install pandas 
-    ```
 5. Run Project
     ```sh
     python app.py
