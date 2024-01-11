@@ -25,7 +25,7 @@ for i in range(1, 10):
     km.fit(df[['Annual Income (k$)', 'Spending Score (1-100)']])
     sse.append(km.inertia_)
 
-plt.xlabel('I')
+plt.xlabel('Cluster')
 plt.ylabel('Sum of squared error')
 plt.plot(range(1, 10), sse)
 
@@ -40,9 +40,13 @@ km = KMeans(n_clusters=5, init='k-means++', random_state=42)  # Inisialisasi pus
 y_predicted = km.fit_predict(df[['Annual Income (k$)', 'Spending Score (1-100)']])
 df["Clusters"] = y_predicted + 1  # Menambah 1 ke setiap nilai klaster
 
+centroid = km.cluster_centers_
+# print(centroid)
+
 plt.figure()
 
-plt.scatter(df['Annual Income (k$)'], df['Spending Score (1-100)'], c=df['Clusters'], cmap='rainbow')
+plt.scatter(df['Annual Income (k$)'], df['Spending Score (1-100)'], c=df['Clusters'], cmap='cividis')
+plt.scatter(centroid[:, 1], centroid[:, 0], c='red', marker='X', s=100)
 plt.title('Customers clustering')
 plt.xlabel('Annual Income (k$)')
 plt.ylabel('Spending Score (1-100)')
@@ -56,16 +60,24 @@ clustering_img_data = base64.b64encode(clustering_img_bytesio.read()).decode('ut
 cluster_distribution_plot_filename = 'static/cluster_distribution_plot.png'
 cluster_counts = df['Clusters'].value_counts().sort_index()
 
+# Get unique colors for each cluster
+colors = plt.cm.Spectral(range(len(cluster_counts)))
+
 plt.figure()
-plt.bar(cluster_counts.index, cluster_counts.values, color='skyblue')
+plt.bar(cluster_counts.index, cluster_counts.values, color=colors)
 plt.title('Cluster Distribution')
 plt.xlabel('Cluster')
 plt.ylabel('Number of Data')
+
+# Display data points within each cluster
+for i, count in enumerate(cluster_counts.values):
+    plt.text(cluster_counts.index[i], count + 0.1, str(count), ha='center', va='bottom', fontsize=8)
 
 cluster_distribution_img_bytesio = BytesIO()
 plt.savefig(cluster_distribution_img_bytesio, format='png')
 cluster_distribution_img_bytesio.seek(0)
 cluster_distribution_img_data = base64.b64encode(cluster_distribution_img_bytesio.read()).decode('utf-8')
+
 
 # --- PLOTTING GENDER
 gender_distribution_plot_filename = 'static/gender_distribution_plot.png'
@@ -82,6 +94,7 @@ gender_distribution_img_bytesio = BytesIO()
 plt.savefig(gender_distribution_img_bytesio, format='png')
 gender_distribution_img_bytesio.seek(0)
 gender_distribution_img_data = base64.b64encode(gender_distribution_img_bytesio.read()).decode('utf-8')
+
 
 # --- PLOTTING AGE 
 age_distribution_plot_filename = 'static/age_distribution_plot.png'
@@ -106,10 +119,16 @@ age_distribution_img_data = base64.b64encode(age_distribution_img_bytesio.read()
 @app.route('/')
 def index():
     sorted_data = df.sort_values(by='Clusters')
-
+    
     sorted_data_records = sorted_data.to_dict('records')
     return render_template('index.html', data=sorted_data_records)
 
+@app.route('/clustered')
+def clustered():
+    sorted_data = df.sort_values(by='Clusters')
+    
+    sorted_data_records = sorted_data.to_dict('records')
+    return render_template('clustered.html', data=sorted_data_records)
 
 @app.route('/sse_page')
 def sse_page():

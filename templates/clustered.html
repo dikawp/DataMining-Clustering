@@ -20,9 +20,9 @@
     <div style="display: flex; flex-direction: row; justify-content: center;">
         <a href="sse_page">SSE PLOT</a>
         <a href="clustering_page">CLUSTERING PLOT</a>
-        <a href="clustered">CLUSTERED DATA</a>
+        <a href="/">RAW DATA</a>
     </div>
-    <h3>RAW DATASET</h3>
+    <h3>CLUSTERED DATASET</h3>
     <div style="display: flex; justify-content: center; text-align: center;">
         <table border="1" style="width: 90%;">
             <thead>
@@ -32,6 +32,7 @@
                     <th>Age</th>
                     <th>Annual Income (k$)</th>
                     <th>Spending Score (1-100)</th>
+                    <th>Clusters</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,7 @@
                         <td>{{ row['Age'] }}</td>
                         <td>{{ row['Annual Income (k$)'] }}</td>
                         <td>{{ row['Spending Score (1-100)'] }}</td>
+                        <td>{{ row['Clusters'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
