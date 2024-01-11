@@ -29,6 +29,9 @@
     ```sh
     pip install scikit-learn 
     ```
+5. Run Project
     ```sh
-    pip install pandas 
+    python app.py
     ```
+
+Buka project di localhost : http://localhost:5000 
